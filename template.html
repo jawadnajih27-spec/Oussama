@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="أنواع الأشجار والأغراس — مشتل المنارة" />
+  <meta name="theme-color" content="#1a2e1a" />
+  <title>مشتل المنارة</title>
+  <link rel="stylesheet" href="assets/style.css" />
+
+  <style>
+    /* ── خاص بصفحة الأنواع ── */
+
+    /* placeholder صورة النوع */
+    .variety-placeholder {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 10px;
+      background: linear-gradient(160deg, #e8dfc8, #d8d0b8);
+    }
+    .variety-placeholder svg { opacity: .3; }
+    .variety-placeholder span {
+      font-size: .7rem; color: #8a9e82;
+      letter-spacing: .08em; font-family: var(--font-body);
+    }
+
+    /* شريط الفلترة */
+    .filter-bar {
+      display: flex; align-items: center; gap: var(--space-3);
+      flex-wrap: wrap; margin-bottom: var(--space-8);
+    }
+    .filter-label {
+      font-size: var(--text-xs); color: var(--color-text-light);
+      letter-spacing: .1em; font-weight: 500;
+      text-transform: uppercase; margin-left: var(--space-2);
+    }
+    .filter-chip {
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius-full);
+      font-size: var(--text-xs); font-weight: 600;
+      letter-spacing: .06em; cursor: pointer;
+      border: 1.5px solid var(--color-border);
+      background: transparent;
+      color: var(--color-text-muted);
+      transition: all var(--transition-fast);
+      font-family: var(--font-body);
+    }
+    .filter-chip:hover   { border-color: var(--color-gold); color: var(--color-gold-dark); }
+    .filter-chip.active  {
+      background: var(--color-forest);
+      border-color: var(--color-forest);
+      color: var(--color-gold-light);
+    }
+
+    /* بطاقة النوع — overlay اللون عند hover */
+    .variety-card { position: relative; }
+    .variety-card__overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(26,46,26,.5) 0%, transparent 55%);
+      opacity: 0; transition: opacity var(--transition-base);
+      pointer-events: none;
+    }
+    .variety-card:hover .variety-card__overlay { opacity: 1; }
+
+    /* شارة الأصل */
+    .origin-tag {
+      position: absolute; top: 10px; right: 10px;
+      background: rgba(26,46,26,.82);
+      backdrop-filter: blur(6px);
+      color: var(--color-gold-light);
+      font-size: 10px; font-weight: 600;
+      letter-spacing: .08em;
+      padding: 3px 10px; border-radius: var(--radius-full);
+      border: 1px solid rgba(201,168,76,.3);
+    }
+
+    /* عداد الكمية */
+    .stock-bar-wrap {
+      margin-top: var(--space-3);
+    }
+    .stock-bar-label {
+      display: flex; justify-content: space-between;
+      font-size: 10px; color: var(--color-text-light);
+      margin-bottom: 4px; letter-spacing: .06em;
+    }
+    .stock-bar-track {
+      height: 3px; background: var(--color-ivory-dark);
+      border-radius: var(--radius-full); overflow: hidden;
+    }
+    .stock-bar-fill {
+      height: 100%; border-radius: var(--radius-full);
+      background: linear-gradient(90deg, var(--color-sage), var(--color-gold));
+      transition: width .6s ease;
+    }
+
+    /* Modal — تفاصيل إضافية */
+    .modal__info-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: var(--space-3); margin-bottom: var(--space-5);
+    }
+    .modal__info-item {
+      background: var(--color-ivory);
+      border-radius: var(--radius-md);
+      padding: var(--space-3) var(--space-4);
+      border: 1px solid transparent;
+      transition: border-color var(--transition-fast);
+    }
+    .modal__info-item:hover { border-color: var(--color-border-gold); }
+    .modal__info-lbl {
+      font-size: 10px; color: var(--color-text-light);
+      letter-spacing: .1em; text-transform: uppercase;
+      display: block; margin-bottom: 3px;
+    }
+    .modal__info-val {
+      font-size: var(--text-sm); color: var(--color-text-main);
+      font-weight: 500; line-height: 1.4;
+    }
+
+    /* Modal صورة placeholder */
+    .modal-img-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(160deg, #2f4a2f, #1a2e1a);
+    }
+    .modal-img-placeholder svg { opacity: .18; }
+
+    /* اسم الصنف الرئيسي فوق العنوان */
+    .modal__parent-cat {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 10px; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--color-moss);
+      font-weight: 600; margin-bottom: var(--space-2);
+    }
+    .modal__parent-cat::before {
+      content: ''; display: block;
+      width: 16px; height: 1px; background: var(--color-sage);
+    }
+
+    /* تحريك الكروت */
+    @keyframes var-in {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .var-animated { animation: var-in 420ms both; }
+
+    /* حالة فارغة */
+    .empty-varieties {
+      text-align: center; padding: var(--space-24) 0;
+      color: var(--color-text-muted); grid-column: 1 / -1;
+    }
+    .empty-varieties svg { opacity: .25; margin: 0 auto var(--space-5); display: block; }
+    .empty-varieties p { font-size: var(--text-sm); line-height: 1.8; }
+
+    /* responsive modal */
+    @media (max-width: 640px) {
+      .modal__layout { grid-template-columns: 1fr; }
+      .modal__image-side { min-height: 220px; }
+      .modal__image, .modal-img-placeholder {
+        border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+      }
+      .modal__content-side { padding: var(--space-5); }
+      .modal__info-grid { grid-template-columns: 1fr 1fr; }
+      .modal__order-btns { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ══════════════════════════════════════════════
+     NAV
+══════════════════════════════════════════════ -->
+<header class="nav" id="mainNav" role="banner">
+  <div class="container">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo" aria-label="العودة إلى الرئيسية">
+        <span class="nav__logo-name" id="navStoreName">مشتل المنارة</span>
+        <span class="nav__logo-tagline" id="navTagline">أجود الأغراس والأشجار المثمرة</span>
+      </a>
+      <nav class="nav__social" aria-label="وسائل التواصل">
+        <a class="social-btn social-btn--whatsapp" href="#" id="navWhatsapp" aria-label="واتساب">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        </a>
+        <a class="social-btn social-btn--facebook"  href="#" id="navFacebook"  aria-label="فيسبوك">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </a>
+        <a class="social-btn social-btn--instagram" href="#" id="navInstagram" aria-label="انستغرام">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        </a>
+        <a class="social-btn social-btn--phone" href="#" id="navPhone" aria-label="هاتف">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11.5a19.79 19.79 0 01-3.07-8.67A2 2 0 012 .84h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.53a16 16 0 006.29 6.29l1.06-1.06a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        </a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+
+<!-- ══════════════════════════════════════════════
+     CATEGORY HERO
+══════════════════════════════════════════════ -->
+<section class="category-hero" id="catHero" aria-labelledby="catTitle">
+  <div class="category-hero__pattern" aria-hidden="true"></div>
+  <div class="container">
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="مسار التنقل">
+      <a href="index.html" class="breadcrumb__item">الرئيسية</a>
+      <span class="breadcrumb__separator" aria-hidden="true">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 4L6 8l4 4"/></svg>
+      </span>
+      <span class="breadcrumb__current" id="breadcrumbCurrent">الأنواع</span>
+    </nav>
+
+    <div class="category-hero__inner">
+
+      <!-- صورة الصنف مصغرة -->
+      <div id="catThumbWrap" style="flex-shrink:0;">
+        <div
+          id="catThumb"
+          style="width:110px;height:110px;border-radius:var(--radius-lg);overflow:hidden;border:2px solid rgba(201,168,76,.4);"
+          role="img" aria-labelledby="catTitle"
+        >
+          <div style="width:100%;height:100%;background:linear-gradient(160deg,#2f4a2f,#1a2e1a);display:flex;align-items:center;justify-content:center;">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#4a6741" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/>
+              <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="category-hero__text">
+        <p class="category-hero__label" id="catLabel">أصناف الأغراس</p>
+        <h1 class="category-hero__title" id="catTitle">أنواع الصنف</h1>
+        <p class="category-hero__desc" id="catDesc">اختر النوع المناسب واطلع على تفاصيله وأسعاره</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════
+     VARIETIES SECTION
+══════════════════════════════════════════════ -->
+<main class="section" id="varietiesSection">
+  <div class="container">
+
+    <!-- Filter bar -->
+    <div class="filter-bar" id="filterBar" role="group" aria-label="تصفية الأنواع">
+      <span class="filter-label">عرض:</span>
+      <button class="filter-chip active" data-filter="all" onclick="filterVarieties('all',this)">الكل</button>
+    </div>
+
+    <!-- الشبكة -->
+    <div class="variety-grid" id="varietyGrid" role="list" aria-label="أنواع الصنف">
+      <!-- تُبنى من JS -->
+    </div>
+
+  </div>
+</main>
+
+
+<!-- ══════════════════════════════════════════════
+     MODAL — تفاصيل النوع
+══════════════════════════════════════════════ -->
+<div
+  class="modal-overlay"
+  id="modalOverlay"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="modalName"
+  aria-hidden="true"
+  onclick="handleOverlayClick(event)"
+>
+  <div class="modal" id="modalBox">
+
+    <!-- زر الإغلاق -->
+    <button class="modal__close" id="modalClose" onclick="closeModal()" aria-label="إغلاق">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+        <line x1="18" y1="6"  x2="6"  y2="18"/>
+        <line x1="6"  y1="6"  x2="18" y2="18"/>
+      </svg>
+    </button>
+
+    <div class="modal__layout">
+
+      <!-- الجانب الأيسر — الصورة -->
+      <div class="modal__image-side" id="modalImageSide">
+        <div class="modal-img-placeholder" id="modalImgPlaceholder" style="width:100%;height:100%;">
+          <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="#4a6741" stroke-width=".8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/>
+            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- الجانب الأيمن — المعلومات -->
+      <div class="modal__content-side">
+
+        <p class="modal__parent-cat" id="modalParentCat">الصنف</p>
+        <h2 class="modal__name" id="modalName">اسم النوع</h2>
+        <p class="modal__purpose" id="modalPurpose">وصف النوع</p>
+
+        <!-- تفاصيل -->
+        <div class="modal__info-grid" id="modalInfoGrid">
+          <div class="modal__info-item">
+            <span class="modal__info-lbl">الأصل</span>
+            <span class="modal__info-val" id="modalOrigin">—</span>
+          </div>
+          <div class="modal__info-item">
+            <span class="modal__info-lbl">الكمية المتوفرة</span>
+            <span class="modal__info-val" id="modalStock">—</span>
+          </div>
+          <div class="modal__info-item">
+            <span class="modal__info-lbl">عمر الإثمار</span>
+            <span class="modal__info-val" id="modalFruiting">—</span>
+          </div>
+          <div class="modal__info-item">
+            <span class="modal__info-lbl">مقاومة الجفاف</span>
+            <span class="modal__info-val" id="modalResistance">—</span>
+          </div>
+        </div>
+
+        <!-- الأحجام والأسعار -->
+        <div class="modal__sizes">
+          <p class="modal__sizes-title">الحجم والسعر</p>
+          <div class="modal__size-list" id="modalSizeList">
+            <!-- تُبنى من JS -->
+          </div>
+        </div>
+
+        <!-- أزرار الطلب -->
+        <p class="modal__order-title">للطلب والاستفسار</p>
+        <div class="modal__order-btns" id="modalOrderBtns">
+
+          <a class="social-btn--lg social-btn social-btn--whatsapp" href="#" id="modalWhatsapp" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width:18px;height:18px;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            واتساب
+          </a>
+
+          <a class="social-btn--lg social-btn social-btn--phone" href="#" id="modalPhone" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:18px;height:18px;"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11.5a19.79 19.79 0 01-3.07-8.67A2 2 0 012 .84h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.53a16 16 0 006.29 6.29l1.06-1.06a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+            اتصل
+          </a>
+
+          <a class="social-btn--lg social-btn social-btn--facebook" href="#" id="modalFacebook" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width:18px;height:18px;"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            فيسبوك
+          </a>
+
+          <a class="social-btn--lg social-btn social-btn--instagram" href="#" id="modalInstagram" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width:18px;height:18px;"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            انستغرام
+          </a>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════ -->
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--space-6);padding-bottom:var(--space-8);border-bottom:1px solid rgba(255,255,255,.07);">
+      <div>
+        <div class="footer__brand-name" id="footerStoreName">مشتل المنارة</div>
+        <p style="font-size:var(--text-sm);color:rgba(248,244,237,.45);margin-top:4px;" id="footerTagline">أجود الأغراس والأشجار المثمرة</p>
+      </div>
+      <nav class="footer__social" aria-label="روابط التواصل">
+        <a class="social-btn social-btn--whatsapp"  href="#" id="footerWhatsapp"  aria-label="واتساب"    style="background:rgba(255,255,255,.07);"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+        <a class="social-btn social-btn--facebook"  href="#" id="footerFacebook"  aria-label="فيسبوك"    style="background:rgba(255,255,255,.07);"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+        <a class="social-btn social-btn--instagram" href="#" id="footerInstagram" aria-label="انستغرام"  style="background:rgba(255,255,255,.07);"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+      </nav>
+    </div>
+    <div class="footer__bottom" style="padding-top:var(--space-6);">
+      <span id="footerCopy">جميع الحقوق محفوظة — مشتل المنارة</span>
+      <a href="index.html" style="font-size:var(--text-xs);color:rgba(248,244,237,.35);display:flex;align-items:center;gap:6px;">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M10 4L6 8l4 4"/></svg>
+        العودة للرئيسية
+      </a>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ══════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+/* ─── المعاملات ─── */
+const CATEGORY_ID = document.currentScript
+  ? (() => {
+      const s = document.currentScript.dataset.cat;
+      return s || null;
+    })()
+  : null;
+
+/* يُقرأ من الملف الابن */
+let CAT_ID     = null;
+let storeData  = null;
+let catData    = null;
+let varieties  = [];
+
+const LEAF_SVG_SM = `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#4a6741"
+  stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/>
+  <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+</svg>`;
+
+/* ══════════════════════════════════════
+   تحميل البيانات
+══════════════════════════════════════ */
+async function fetchJSON(p) {
+  const r = await fetch(p);
+  if (!r.ok) throw new Error('fetch ' + p);
+  return r.json();
+}
+
+/* ══════════════════════════════════════
+   تطبيق بيانات المتجر
+══════════════════════════════════════ */
+function applyStore(store) {
+  if (!store) return;
+  const set = (id, v) => { const e = document.getElementById(id); if (e && v) e.textContent = v; };
+  const href = (id, v) => { const e = document.getElementById(id); if (e && v) e.href = v; };
+
+  set('navStoreName',   store.name);
+  set('navTagline',     store.tagline);
+  set('footerStoreName',store.name);
+  set('footerTagline',  store.tagline);
+  set('footerCopy', `جميع الحقوق محفوظة — ${store.name} ${new Date().getFullYear()}`);
+
+  const c = store.contact;
+  if (!c) return;
+  const wa  = c.whatsapp  ? `https://wa.me/${c.whatsapp}`  : '#';
+  const tel = c.phone     ? `tel:${c.phone}`               : '#';
+  const fb  = c.facebook  || '#';
+  const ig  = c.instagram || '#';
+
+  href('navWhatsapp',    wa);
+  href('navFacebook',    fb);
+  href('navInstagram',   ig);
+  href('navPhone',       tel);
+  href('footerWhatsapp', wa);
+  href('footerFacebook', fb);
+  href('footerInstagram',ig);
+
+  /* حفظ للـ modal */
+  window._storeContact = { wa, tel, fb, ig };
+}
+
+/* ══════════════════════════════════════
+   بناء بطاقة نوع
+══════════════════════════════════════ */
+function buildVarietyCard(v, i, catName) {
+  const minPrice  = Math.min(...v.sizes.map(s => s.price));
+  const maxStock  = 500;
+  const stockPct  = Math.min(100, Math.round((v.stock / maxStock) * 100));
+  const delay     = (i % 4) * 70;
+
+  const imgHtml = v.image
+    ? `<img
+        class="variety-card__image"
+        src="${v.image}"
+        alt="${v.name}"
+        loading="lazy"
+        onerror="this.parentElement.innerHTML='<div class=\\'variety-placeholder\\'>${LEAF_SVG_SM}<span>${v.name}</span></div>'"
+      />`
+    : `<div class="variety-placeholder">${LEAF_SVG_SM}<span>${v.name}</span></div>`;
+
+  return `
+  <article
+    class="variety-card var-animated"
+    style="animation-delay:${delay}ms"
+    role="listitem"
+    tabindex="0"
+    aria-label="${v.name}"
+    onclick="openModal(${JSON.stringify(v).replace(/"/g,'&quot;')}, '${catName}')"
+    onkeydown="if(event.key==='Enter'||event.key===' ')openModal(${JSON.stringify(v).replace(/"/g,'&quot;')},'${catName}')"
+  >
+    <div class="variety-card__image-wrap">
+      ${imgHtml}
+      <div class="variety-card__overlay" aria-hidden="true"></div>
+      <span class="origin-tag">${v.origin || ''}</span>
+    </div>
+
+    <div class="variety-card__body">
+      <h3 class="variety-card__name">${v.name}</h3>
+      <p class="variety-card__purpose">${v.purpose.length > 90 ? v.purpose.slice(0,90)+'…' : v.purpose}</p>
+
+      <div class="variety-card__price-row">
+        <span class="variety-card__price-from">يبدأ من</span>
+        <span class="variety-card__price-value">
+          <span class="variety-card__price-currency">درهم</span>${minPrice}
+        </span>
+      </div>
+
+      <div class="stock-bar-wrap">
+        <div class="stock-bar-label">
+          <span>الكمية المتوفرة</span>
+          <span>${v.stock} وحدة</span>
+        </div>
+        <div class="stock-bar-track">
+          <div class="stock-bar-fill" style="width:${stockPct}%"></div>
+        </div>
+      </div>
+    </div>
+  </article>`;
+}
+
+/* ══════════════════════════════════════
+   فلترة
+══════════════════════════════════════ */
+function filterVarieties(filter, btn) {
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  /* توسع مستقبلي — حالياً يعرض الكل */
+  renderVarieties(varieties, catData ? catData.category_name : '');
+}
+
+/* ══════════════════════════════════════
+   عرض الكروت
+══════════════════════════════════════ */
+function renderVarieties(vars, catName) {
+  const grid = document.getElementById('varietyGrid');
+  if (!grid) return;
+
+  if (!vars || !vars.length) {
+    grid.innerHTML = `
+      <div class="empty-varieties">
+        ${LEAF_SVG_SM}
+        <p>لا توجد أنواع متاحة حالياً لهذا الصنف.<br>تواصل معنا للاستفسار.</p>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = vars.map((v, i) => buildVarietyCard(v, i, catName)).join('');
+}
+
+/* ══════════════════════════════════════
+   MODAL — فتح
+══════════════════════════════════════ */
+function openModal(variety, catName) {
+  const overlay = document.getElementById('modalOverlay');
+
+  /* الصورة */
+  const imgSide = document.getElementById('modalImageSide');
+  if (variety.image) {
+    imgSide.innerHTML = `<img
+      src="${variety.image}"
+      alt="${variety.name}"
+      class="modal__image"
+      style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-xl) 0 0 var(--radius-xl);"
+      onerror="this.outerHTML='<div class=\\'modal-img-placeholder\\'><svg width=\\'100\\' height=\\'100\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'#4a6741\\' stroke-width=\\'.8\\' stroke-linecap=\\'round\\' stroke-linejoin=\\'round\\'><path d=\\'M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z\\'/><path d=\\'M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12\\'/></svg></div>'"
+    />`;
+  } else {
+    imgSide.innerHTML = `<div class="modal-img-placeholder" style="width:100%;height:100%;border-radius:var(--radius-xl) 0 0 var(--radius-xl);">
+      <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="#4a6741" stroke-width=".8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/>
+        <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+      </svg>
+    </div>`;
+  }
+
+  /* النصوص */
+  const setText = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v || '—'; };
+  setText('modalParentCat',  catName);
+  setText('modalName',       variety.name);
+  setText('modalPurpose',    variety.purpose);
+  setText('modalOrigin',     variety.origin);
+  setText('modalStock',      variety.stock ? `${variety.stock} وحدة` : '—');
+  setText('modalFruiting',   variety.fruiting_age);
+  setText('modalResistance', variety.resistance);
+
+  /* الأحجام */
+  const sizeList = document.getElementById('modalSizeList');
+  if (sizeList && variety.sizes) {
+    sizeList.innerHTML = variety.sizes.map((s, i) => `
+      <div
+        class="modal__size-item ${i === 0 ? 'is-selected' : ''}"
+        onclick="selectSize(this)"
+        tabindex="0"
+        role="radio"
+        aria-checked="${i === 0}"
+        aria-label="${s.height} — ${s.price} درهم"
+      >
+        <div>
+          <span class="modal__size-height">${s.height}</span>
+          ${s.age ? `<span style="font-size:10px;color:var(--color-text-light);display:block;margin-top:2px;">${s.age}</span>` : ''}
+        </div>
+        <span class="modal__size-price">
+          <span class="modal__size-currency">درهم </span>${s.price}
+        </span>
+      </div>`).join('');
+  }
+
+  /* روابط التواصل */
+  const sc = window._storeContact || {};
+  const productMsg = encodeURIComponent(`السلام عليكم، أودّ الاستفسار عن: ${variety.name}`);
+  const waLink = sc.wa && sc.wa !== '#'
+    ? `${sc.wa}?text=${productMsg}`
+    : '#';
+
+  const setHref = (id, v) => { const e = document.getElementById(id); if (e) e.href = v; };
+  setHref('modalWhatsapp',  waLink);
+  setHref('modalPhone',     sc.tel  || '#');
+  setHref('modalFacebook',  sc.fb   || '#');
+  setHref('modalInstagram', sc.ig   || '#');
+
+  /* فتح */
+  overlay.classList.add('is-open');
+  overlay.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+
+  /* focus trap */
+  setTimeout(() => {
+    const closeBtn = document.getElementById('modalClose');
+    if (closeBtn) closeBtn.focus();
+  }, 50);
+}
+
+/* ══════════════════════════════════════
+   MODAL — إغلاق
+══════════════════════════════════════ */
+function closeModal() {
+  const overlay = document.getElementById('modalOverlay');
+  overlay.classList.remove('is-open');
+  overlay.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+/* Escape key */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+/* ══════════════════════════════════════
+   اختيار حجم في الـ modal
+══════════════════════════════════════ */
+function selectSize(el) {
+  document.querySelectorAll('.modal__size-item').forEach(i => {
+    i.classList.remove('is-selected');
+    i.setAttribute('aria-checked', 'false');
+  });
+  el.classList.add('is-selected');
+  el.setAttribute('aria-checked', 'true');
+}
+
+/* ══════════════════════════════════════
+   Nav scroll
+══════════════════════════════════════ */
+function initNav() {
+  const nav = document.getElementById('mainNav');
+  const tick = () => nav.classList.toggle('nav--scrolled', window.scrollY > 30);
+  window.addEventListener('scroll', tick, { passive: true });
+  tick();
+}
+
+/* ══════════════════════════════════════
+   INIT — يستدعيه الملف الابن
+══════════════════════════════════════ */
+async function initCategoryPage(catId) {
+  CAT_ID = catId;
+  initNav();
+
+  try {
+    /* تحميل البيانات */
+    const [catsData, prodsData] = await Promise.all([
+      fetchJSON('data/categories.json'),
+      fetchJSON('data/products.json')
+    ]);
+
+    storeData = catsData.store;
+    applyStore(storeData);
+
+    /* إيجاد معلومات الصنف */
+    const catMeta = catsData.categories.find(c => c.id === catId || c.slug === catId);
+    catData  = prodsData[catId];
+
+    /* Hero */
+    if (catMeta) {
+      const setText = (id, v) => { const e = document.getElementById(id); if (e && v) e.textContent = v; };
+      setText('catTitle',          catMeta.name);
+      setText('catLabel',          catMeta.type ? `أشجار ${catMeta.type}` : 'أصناف الأغراس');
+      setText('catDesc',           catMeta.short_desc);
+      setText('breadcrumbCurrent', catMeta.name);
+      document.title = `${catMeta.name} — ${storeData ? storeData.name : 'مشتل المنارة'}`;
+      document.querySelector('meta[name="description"]').content =
+        `${catMeta.name}: ${catMeta.short_desc} — ${storeData ? storeData.name : 'مشتل المنارة'}`;
+
+      /* صورة الصنف في الهيدر */
+      if (catMeta.image) {
+        const thumb = document.getElementById('catThumb');
+        if (thumb) {
+          thumb.innerHTML = `<img
+            src="${catMeta.image}"
+            alt="${catMeta.name}"
+            style="width:100%;height:100%;object-fit:cover;"
+            onerror="this.parentElement.innerHTML='<div style=\\'width:100%;height:100%;background:linear-gradient(160deg,#2f4a2f,#1a2e1a);display:flex;align-items:center;justify-content:center;\\'><svg width=\\'48\\' height=\\'48\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'#4a6741\\' stroke-width=\\'1\\' stroke-linecap=\\'round\\' stroke-linejoin=\\'round\\'><path d=\\'M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z\\'/><path d=\\'M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12\\'/></svg></div>'"
+          />`;
+        }
+      }
+    }
+
+    /* الأنواع */
+    if (catData) {
+      varieties = catData.varieties || [];
+      const catName = catData.category_name || (catMeta ? catMeta.name : '');
+      setText2('catDesc', catData.category_desc || (catMeta ? catMeta.short_desc : ''));
+      renderVarieties(varieties, catName);
+    } else {
+      renderVarieties([], '');
+    }
+
+  } catch (err) {
+    console.warn('خطأ في تحميل البيانات:', err.message);
+    renderVarieties([], '');
+  }
+}
+
+function setText2(id, v) {
+  const e = document.getElementById(id);
+  if (e && v) e.textContent = v;
+}
+</script>
+
+<!-- يستدعي الملف الابن initCategoryPage بعد هذا السطر -->
+</body>
+</html>

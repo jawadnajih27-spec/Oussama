@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="مشتل المنارة — أجود الأغراس والأشجار المثمرة في المغرب. زيتون وحمضيات وتين وورد ونخيل بأصناف نادرة وأسعار تنافسية." />
+  <meta name="theme-color" content="#1a2e1a" />
+  <title>مشتل المنارة — أجود الأغراس والأشجار المثمرة</title>
+  <link rel="stylesheet" href="assets/style.css" />
+
+  <style>
+    /* ── صفحة-خاصة ── */
+    .hero-placeholder {
+      background: linear-gradient(160deg, #1a2e1a 0%, #2f4a2f 60%, #1a2e1a 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-placeholder::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(ellipse 80% 60% at 70% 40%, rgba(74,103,65,0.35) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 20% 70%, rgba(201,168,76,0.08) 0%, transparent 55%);
+    }
+    /* شبكة نقطية زخرفية */
+    .hero-dots {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(201,168,76,0.18) 1px, transparent 1px);
+      background-size: 36px 36px;
+      mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 30%, transparent 100%);
+    }
+    /* خط ذهبي أسفل البطل */
+    .hero-gold-line {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #c9a84c 40%, #e2c472 50%, #c9a84c 60%, transparent);
+    }
+
+    /* بطاقة غياب الصورة */
+    .card__img-placeholder {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 10px;
+      background: linear-gradient(160deg, #e8dfc8, #ede8de);
+    }
+    .card__img-placeholder svg { opacity: .35; }
+    .card__img-placeholder span {
+      font-size: .7rem; color: #8a9e82;
+      letter-spacing: .08em; font-family: var(--font-body);
+    }
+
+    /* قسم التعريف — صورة صاحب المشتل */
+    .owner-avatar {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(160deg, #243824, #1a2e1a);
+    }
+    .owner-avatar svg { opacity: .25; }
+
+    /* شريط الخصائص */
+    .features-bar {
+      background: var(--color-ivory-dark);
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+      padding: var(--space-5) 0;
+      overflow: hidden;
+    }
+    .features-inner {
+      display: flex; align-items: center;
+      justify-content: center; gap: var(--space-12);
+      flex-wrap: wrap;
+    }
+    .feature-item {
+      display: flex; align-items: center; gap: var(--space-3);
+      font-size: var(--text-sm); color: var(--color-text-muted);
+      font-weight: 400; white-space: nowrap;
+    }
+    .feature-icon {
+      width: 32px; height: 32px;
+      background: var(--color-forest);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .feature-icon svg { width: 14px; height: 14px; color: var(--color-gold); }
+
+    /* قسم الأقسام — تصنيف نوع الشجرة */
+    .type-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 10px; border-radius: 999px;
+      font-size: 10px; font-weight: 600; letter-spacing: .1em;
+      text-transform: uppercase; border: 1px solid;
+    }
+    .type-badge--fruit   { background: rgba(74,103,65,.12); color: #3a5a32; border-color: rgba(74,103,65,.3); }
+    .type-badge--decor   { background: rgba(190,24,93,.08);  color: #9d174d; border-color: rgba(190,24,93,.25); }
+    .type-badge--both    { background: rgba(201,168,76,.12); color: #7a5c1e; border-color: rgba(201,168,76,.3); }
+
+    /* نجمة featured */
+    .featured-star {
+      position: absolute; top: 10px; left: 10px;
+      width: 28px; height: 28px;
+      background: var(--color-gold);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 8px rgba(201,168,76,.4);
+    }
+    .featured-star svg { width: 13px; height: 13px; color: var(--color-forest); }
+
+    /* مؤشر الكمية على البطاقة */
+    .stock-pill {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 10px; color: var(--color-text-light);
+      letter-spacing: .06em;
+    }
+    .stock-pill-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--color-sage); display: inline-block;
+    }
+
+    /* قسم الشهادات */
+    .testimonials { background: var(--color-ivory); }
+    .testi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px,1fr));
+      gap: var(--space-6);
+    }
+    .testi-card {
+      background: var(--color-warm-white);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+    }
+    .testi-stars { display: flex; gap: 3px; margin-bottom: var(--space-3); }
+    .testi-star { color: var(--color-gold); }
+    .testi-star svg { width: 13px; height: 13px; }
+    .testi-text {
+      font-size: var(--text-sm); color: var(--color-text-muted);
+      line-height: 1.8; font-style: italic; margin-bottom: var(--space-4);
+    }
+    .testi-author {
+      display: flex; align-items: center; gap: var(--space-3);
+    }
+    .testi-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: var(--color-forest);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .testi-avatar svg { width: 18px; height: 18px; color: var(--color-gold); opacity: .7; }
+    .testi-name { font-size: var(--text-sm); font-weight: 600; color: var(--color-text-main); }
+    .testi-city { font-size: var(--text-xs); color: var(--color-text-light); }
+
+    /* CTA نهاية الصفحة */
+    .cta-section {
+      background: var(--color-forest);
+      text-align: center; position: relative; overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(201,168,76,.07), transparent);
+    }
+    .cta-inner { position: relative; z-index: 1; }
+    .cta-title {
+      font-family: var(--font-display);
+      font-size: clamp(var(--text-2xl), 5vw, var(--text-4xl));
+      font-weight: 300; color: var(--color-ivory); margin-bottom: var(--space-4);
+    }
+    .cta-subtitle {
+      font-size: var(--text-md); color: rgba(248,244,237,.65);
+      font-weight: 300; margin-bottom: var(--space-8);
+      max-width: 480px; margin-left: auto; margin-right: auto; line-height: 1.8;
+    }
+    .cta-btns { display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap; }
+
+    /* أنيماشن دخول البطاقات */
+    @keyframes card-in {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .card-animated { animation: card-in 480ms both; }
+  </style>
+</head>
+
+<body>
+
+<!-- ══════════════════════════════════════════════
+     NAVIGATION
+══════════════════════════════════════════════ -->
+<header class="nav" id="mainNav" role="banner">
+  <div class="container">
+    <div class="nav__inner">
+
+      <!-- الشعار -->
+      <div class="nav__logo">
+        <span class="nav__logo-name">مشتل المنارة</span>
+        <span class="nav__logo-tagline">أجود الأغراس والأشجار المثمرة</span>
+      </div>
+
+      <!-- أيقونات التواصل -->
+      <nav class="nav__social" aria-label="وسائل التواصل الاجتماعي">
+        <a class="social-btn social-btn--whatsapp" href="#" id="navWhatsapp" aria-label="واتساب" title="تواصل عبر واتساب">
+          <!-- WhatsApp SVG -->
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          </svg>
+        </a>
+        <a class="social-btn social-btn--facebook" href="#" id="navFacebook" aria-label="فيسبوك" title="صفحتنا على فيسبوك">
+          <!-- Facebook SVG -->
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+          </svg>
+        </a>
+        <a class="social-btn social-btn--instagram" href="#" id="navInstagram" aria-label="انستغرام" title="متابعتنا على انستغرام">
+          <!-- Instagram SVG -->
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+          </svg>
+        </a>
+        <a class="social-btn social-btn--phone" href="#" id="navPhone" aria-label="اتصال هاتفي" title="اتصل بنا">
+          <!-- Phone SVG -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11.5a19.79 19.79 0 01-3.07-8.67A2 2 0 012 .84h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.53a16 16 0 006.29 6.29l1.06-1.06a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+          </svg>
+        </a>
+      </nav>
+
+    </div>
+  </div>
+</header>
+
+
+<!-- ══════════════════════════════════════════════
+     HERO SECTION
+══════════════════════════════════════════════ -->
+<section class="hero hero-placeholder" aria-labelledby="heroTitle">
+  <div class="hero__bg">
+    <div class="hero-dots" aria-hidden="true"></div>
+
+    <!-- SVG زخرفي نباتي خلفية -->
+    <svg style="position:absolute;bottom:0;left:0;opacity:.06;width:420px;height:420px;" viewBox="0 0 200 200" fill="none" aria-hidden="true">
+      <path d="M100 10 Q130 40 100 70 Q70 40 100 10Z" fill="#c9a84c"/>
+      <path d="M100 60 Q140 80 130 120 Q100 110 100 60Z" fill="#4a6741"/>
+      <path d="M100 60 Q60 80 70 120 Q100 110 100 60Z" fill="#4a6741"/>
+      <path d="M100 110 Q120 140 100 170 Q80 140 100 110Z" fill="#c9a84c" opacity=".6"/>
+      <line x1="100" y1="10" x2="100" y2="190" stroke="#4a6741" stroke-width="2"/>
+    </svg>
+    <svg style="position:absolute;top:40px;right:40px;opacity:.05;width:280px;height:280px;transform:rotate(30deg);" viewBox="0 0 200 200" fill="none" aria-hidden="true">
+      <circle cx="100" cy="100" r="80" stroke="#c9a84c" stroke-width="1"/>
+      <circle cx="100" cy="100" r="55" stroke="#4a6741" stroke-width="1"/>
+      <circle cx="100" cy="100" r="30" stroke="#c9a84c" stroke-width="1"/>
+    </svg>
+
+  </div>
+  <div class="hero-gold-line" aria-hidden="true"></div>
+
+  <div class="container">
+    <div class="hero__content">
+
+      <div class="hero__badge fade-up">
+        <span class="hero__badge-dot" aria-hidden="true"></span>
+        مشتل معتمد — مراكش، المغرب
+      </div>
+
+      <h1 class="hero__title fade-up fade-up-delay-1" id="heroTitle">
+        حيث تبدأ
+        <em>الحياة الخضراء</em>
+      </h1>
+
+      <p class="hero__subtitle fade-up fade-up-delay-2">
+        أجود الأغراس والأشجار المثمرة وغير المثمرة — من الزيتون العريق إلى النخيل الفارع، نختار لك ما يليق بأرضك وطموحك
+      </p>
+
+      <a href="#products" class="hero__cta fade-up fade-up-delay-3" aria-label="تصفح مجموعتنا من الأغراس">
+        <!-- Arrow icon -->
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 8h10M9 4l4 4-4 4"/>
+        </svg>
+        تصفح المجموعة
+      </a>
+
+      <!-- إحصائيات سريعة -->
+      <div style="display:flex;gap:var(--space-8);justify-content:center;margin-top:var(--space-12);flex-wrap:wrap;" class="fade-up fade-up-delay-4" role="list">
+        <div style="text-align:center;" role="listitem">
+          <span style="display:block;font-family:var(--font-display);font-size:var(--text-3xl);color:var(--color-gold-light);line-height:1;" id="statVarieties">200+</span>
+          <span style="font-size:var(--text-xs);color:rgba(248,244,237,.55);letter-spacing:.1em;margin-top:4px;display:block;">صنف ونوع</span>
+        </div>
+        <div style="width:1px;background:rgba(201,168,76,.2);" aria-hidden="true"></div>
+        <div style="text-align:center;" role="listitem">
+          <span style="display:block;font-family:var(--font-display);font-size:var(--text-3xl);color:var(--color-gold-light);line-height:1;" id="statClients">1500+</span>
+          <span style="font-size:var(--text-xs);color:rgba(248,244,237,.55);letter-spacing:.1em;margin-top:4px;display:block;">عميل راضٍ</span>
+        </div>
+        <div style="width:1px;background:rgba(201,168,76,.2);" aria-hidden="true"></div>
+        <div style="text-align:center;" role="listitem">
+          <span style="display:block;font-family:var(--font-display);font-size:var(--text-3xl);color:var(--color-gold-light);line-height:1;" id="statYears">15</span>
+          <span style="font-size:var(--text-xs);color:rgba(248,244,237,.55);letter-spacing:.1em;margin-top:4px;display:block;">سنة خبرة</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="hero__scroll-hint" aria-hidden="true">
+    <div class="hero__scroll-line"></div>
+    <span>تصفح</span>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════
+     FEATURES BAR
+══════════════════════════════════════════════ -->
+<div class="features-bar" role="list" aria-label="مميزات المشتل">
+  <div class="container">
+    <div class="features-inner">
+
+      <div class="feature-item" role="listitem">
+        <div class="feature-icon" aria-hidden="true">
+          <!-- Leaf icon -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/>
+            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+          </svg>
+        </div>
+        أصناف مغربية وعالمية نادرة
+      </div>
+
+      <div class="feature-item" role="listitem">
+        <div class="feature-icon" aria-hidden="true">
+          <!-- Shield icon -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        ضمان الجودة والنمو
+      </div>
+
+      <div class="feature-item" role="listitem">
+        <div class="feature-icon" aria-hidden="true">
+          <!-- Truck icon -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="3" width="15" height="13" rx="1"/>
+            <path d="M16 8h4l3 3v5h-7V8z"/>
+            <circle cx="5.5" cy="18.5" r="2.5"/>
+            <circle cx="18.5" cy="18.5" r="2.5"/>
+          </svg>
+        </div>
+        توصيل لجميع مناطق المغرب
+      </div>
+
+      <div class="feature-item" role="listitem">
+        <div class="feature-icon" aria-hidden="true">
+          <!-- Sun icon -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        </div>
+        إرشاد زراعي مجاني
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     ABOUT — صاحب المشتل
+══════════════════════════════════════════════ -->
+<section class="about section" id="about" aria-labelledby="aboutTitle">
+  <div class="about__pattern" aria-hidden="true"></div>
+  <div class="container">
+    <div class="about__inner">
+
+      <!-- صورة -->
+      <div class="about__image-wrap reveal">
+        <div class="about__image-frame">
+          <div class="owner-avatar" role="img" aria-label="صاحب المشتل">
+            <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#4a6741" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+        </div>
+        <div class="about__badge-float" aria-label="خمسة عشر سنة خبرة">
+          <span class="number" id="aboutYears">15</span>
+          <span class="label">سنة خبرة</span>
+        </div>
+      </div>
+
+      <!-- النص -->
+      <div class="reveal">
+        <p class="about__label" aria-hidden="true">من نحن</p>
+        <h2 class="about__title" id="aboutTitle">
+          شغف <em>بالأرض</em><br>واحتراف في الزراعة
+        </h2>
+        <p class="about__text" id="aboutBio">
+          بدأت رحلتي مع الزراعة منذ الصغر في أحضان الطبيعة المغربية. بعد سنوات من الدراسة والتخصص في علوم الزراعة، قررت أن أجمع بين الشغف والاحتراف لأنشئ مشتلاً يليق بأرضنا وتراثنا الزراعي العريق. اليوم، يضم مشتل المنارة مئات الأصناف النادرة والمحلية، ويخدم المزارعين والمهندسين الزراعيين والأسر الراغبة في تخضير محيطها.
+        </p>
+
+        <div class="about__stats" role="list">
+          <div role="listitem">
+            <span class="about__stat-number" id="statVarieties2">200+</span>
+            <span class="about__stat-label">صنف ونوع</span>
+          </div>
+          <div role="listitem">
+            <span class="about__stat-number" id="statClients2">1500+</span>
+            <span class="about__stat-label">عميل راضٍ</span>
+          </div>
+          <div role="listitem">
+            <span class="about__stat-number" id="statExp">15</span>
+            <span class="about__stat-label">سنة خبرة</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════
+     PRODUCTS GRID — الأصناف الرئيسية
+══════════════════════════════════════════════ -->
+<section class="products section" id="products" aria-labelledby="productsTitle">
+  <div class="container">
+
+    <header class="products__header reveal">
+      <p class="section-label">مجموعتنا</p>
+      <h2 class="section-title" id="productsTitle">
+        أصناف <em>الأغراس والأشجار</em>
+      </h2>
+      <p class="section-subtitle">
+        اختر صنفك المفضل واكتشف التنوع الذي يميز مشتل المنارة — من الأشجار المثمرة إلى أشجار الزينة النادرة
+      </p>
+    </header>
+
+    <!-- شبكة البطاقات — تُبنى من JavaScript -->
+    <div class="products__grid" id="categoriesGrid" role="list" aria-label="أصناف الأغراس">
+      <!-- تُحقن بواسطة JS -->
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════
+     TESTIMONIALS — آراء العملاء
+══════════════════════════════════════════════ -->
+<section class="testimonials section section--sm" aria-labelledby="testiTitle">
+  <div class="container">
+
+    <header class="products__header reveal" style="margin-bottom:var(--space-10);">
+      <p class="section-label">آراء العملاء</p>
+      <h2 class="section-title" id="testiTitle">ماذا يقول <em>عملاؤنا</em></h2>
+    </header>
+
+    <div class="testi-grid">
+
+      <article class="testi-card reveal">
+        <div class="testi-stars" aria-label="تقييم خمس نجوم">
+          <span class="testi-star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span>
+          <span class="testi-star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span>
+          <span class="testi-star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span>
+          <span class="testi-star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span>
+          <span class="testi-star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span>
+        </div>
+        <p class="testi-text">اشتريت عشرين شجرة زيتون بيشولين من مشتل المنارة، وبعد سنتين الأشجار بخير تام ونضارة واضحة. الجودة تفوق التوقعات والخدمة ممتازة.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div>
+            <div class="testi-name">حمزة الوردي</div>
+            <div class="testi-city">فلاح — منطقة مراكش</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="testi-card reveal">
+        <div class="testi-stars" aria-label="تقييم خمس نجوم">
+          <span class="testi-star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span>
+          <span class="testi-star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span>
+          <span class="testi-star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span>
+          <span class="testi-star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span>
+          <span class="testi-star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span>
+        </div>
+        <p class="testi-text">نخيل المجهول الذي اشتريته وصل في حالة مثالية مع تعليمات الزراعة الواضحة. الآن بعد ثلاث سنوات هو فخر حديقتي. أنصح الجميع بمشتل المنارة.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div>
+            <div class="testi-name">فاطمة الزهراء بنمسعود</div>
+            <div class="testi-city">مهندسة زراعية — أكادير</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="testi-card reveal">
+        <div class="testi-stars" aria-label="تقييم خمس نجوم">
+          <span class="testi-star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span>
+          <span class="testi-star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span>
+          <span class="testi-star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span>
+          <span class="testi-star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span>
+          <span class="testi-star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span>
+        </div>
+        <p class="testi-text">طلبت أشجار كلمنتين وورد دمشقي للفيلا. التوصيل كان في الوقت المحدد، والأشجار صحية ومعبأة بعناية. خدمة راقية تليق باسم المنارة.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div>
+            <div class="testi-name">يوسف الناصري</div>
+            <div class="testi-city">مقاول — الدار البيضاء</div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════
+     CTA — تواصل معنا
+══════════════════════════════════════════════ -->
+<section class="cta-section section" aria-labelledby="ctaTitle">
+  <div class="container">
+    <div class="cta-inner reveal">
+      <p class="section-label" style="justify-content:center;color:var(--color-gold-light);">تواصل معنا</p>
+      <h2 class="cta-title" id="ctaTitle">هل لديك استفسار أو طلب <em style="font-style:italic;color:var(--color-gold-light);">خاص؟</em></h2>
+      <p class="cta-subtitle">فريقنا المتخصص مستعد للإجابة على جميع أسئلتك الزراعية وتقديم أفضل العروض المناسبة لاحتياجاتك</p>
+      <div class="cta-btns">
+        <a class="social-btn--lg social-btn social-btn--whatsapp" href="#" id="ctaWhatsapp" role="button">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width:18px;height:18px;">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          </svg>
+          واتساب
+        </a>
+        <a class="social-btn--lg social-btn social-btn--phone" href="#" id="ctaPhone" role="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:18px;height:18px;">
+            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11.5a19.79 19.79 0 01-3.07-8.67A2 2 0 012 .84h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.53a16 16 0 006.29 6.29l1.06-1.06a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+          </svg>
+          اتصل بنا
+        </a>
+        <a class="social-btn--lg social-btn social-btn--facebook" href="#" id="ctaFacebook" role="button">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width:18px;height:18px;">
+            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+          </svg>
+          فيسبوك
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════ -->
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer__grid">
+
+      <!-- العلامة التجارية -->
+      <div>
+        <div class="footer__brand-name" id="footerStoreName">مشتل المنارة</div>
+        <p class="footer__brand-desc" id="footerDesc">
+          أجود الأغراس والأشجار المثمرة في المغرب — نخدم الفلاحين والمهندسين الزراعيين والأسر بخبرة تمتد لأكثر من خمسة عشر عاماً.
+        </p>
+        <nav class="footer__social" aria-label="روابط التواصل في الفوتر">
+          <a class="social-btn social-btn--whatsapp" href="#" id="footerWhatsapp" aria-label="واتساب" style="background:rgba(255,255,255,.07);">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          </a>
+          <a class="social-btn social-btn--facebook" href="#" id="footerFacebook" aria-label="فيسبوك" style="background:rgba(255,255,255,.07);">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+          <a class="social-btn social-btn--instagram" href="#" id="footerInstagram" aria-label="انستغرام" style="background:rgba(255,255,255,.07);">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+        </nav>
+      </div>
+
+      <!-- روابط سريعة -->
+      <nav aria-label="روابط سريعة">
+        <div class="footer__col-title">روابط سريعة</div>
+        <ul class="footer__links">
+          <li><a href="#" class="footer__link">الرئيسية</a></li>
+          <li><a href="#about" class="footer__link">من نحن</a></li>
+          <li><a href="#products" class="footer__link">أصنافنا</a></li>
+          <li><a href="#" class="footer__link" id="footerContact">تواصل معنا</a></li>
+        </ul>
+      </nav>
+
+      <!-- معلومات التواصل -->
+      <div>
+        <div class="footer__col-title">تواصل معنا</div>
+        <ul class="footer__links">
+          <li>
+            <a href="#" class="footer__link" id="footerPhoneLink" style="display:flex;align-items:center;gap:8px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11.5a19.79 19.79 0 01-3.07-8.67A2 2 0 012 .84h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.53a16 16 0 006.29 6.29l1.06-1.06a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+              <span id="footerPhone">0600000000</span>
+            </a>
+          </li>
+          <li>
+            <span class="footer__link" style="display:flex;align-items:center;gap:8px;cursor:default;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span id="footerCity">مراكش، المغرب</span>
+            </span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="footer__bottom">
+      <span id="footerCopyright">جميع الحقوق محفوظة — مشتل المنارة 2025</span>
+      <span class="footer__credit">تصميم واحترافية في خدمتكم</span>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ══════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+/* ─── مسار قاعدة البيانات ─── */
+const DATA_BASE = 'data/';
+
+/* ─── نوع الشجرة → class ─── */
+const TYPE_CLASS = {
+  'مثمرة':        'type-badge--fruit',
+  'زينة':         'type-badge--decor',
+  'زينة ومثمرة':  'type-badge--both'
+};
+
+/* ─── SVG أيقونة الورقة (placeholder) ─── */
+const LEAF_SVG = `<svg width="48" height="48" viewBox="0 0 24 24" fill="none"
+  stroke="#4a6741" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/>
+  <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+</svg>`;
+
+/* ─── SVG نجمة (featured) ─── */
+const STAR_SVG = `<svg viewBox="0 0 24 24" fill="currentColor">
+  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+</svg>`;
+
+/* ─── SVG سهم ─── */
+const ARROW_SVG = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor"
+  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M3 8h10M9 4l4 4-4 4"/>
+</svg>`;
+
+/* ══════════════════════════════════════
+   تحميل البيانات
+══════════════════════════════════════ */
+async function fetchJSON(path) {
+  const r = await fetch(path);
+  if (!r.ok) throw new Error(`فشل تحميل: ${path}`);
+  return r.json();
+}
+
+/* ══════════════════════════════════════
+   بناء بطاقة صنف
+══════════════════════════════════════ */
+function buildCategoryCard(cat, index) {
+  const typeClass = TYPE_CLASS[cat.type] || 'type-badge--fruit';
+  const delay     = (index % 5) * 80;
+
+  const imgContent = cat.image
+    ? `<img
+        class="card__image"
+        src="${cat.image}"
+        alt="صورة ${cat.name}"
+        loading="lazy"
+        onerror="this.parentElement.innerHTML='<div class=\\'card__img-placeholder\\'>${LEAF_SVG}<span>${cat.name}</span></div>'"
+      />`
+    : `<div class="card__img-placeholder">${LEAF_SVG}<span>${cat.name}</span></div>`;
+
+  const featuredBadge = cat.featured
+    ? `<div class="featured-star" aria-label="صنف مميز">${STAR_SVG}</div>`
+    : '';
+
+  return `
+  <article
+    class="card card-animated"
+    style="animation-delay:${delay}ms"
+    role="listitem"
+    tabindex="0"
+    aria-label="${cat.name} — ${cat.short_desc}"
+    data-slug="${cat.slug}"
+    onclick="goToCategory('${cat.slug}')"
+    onkeydown="if(event.key==='Enter'||event.key===' ')goToCategory('${cat.slug}')"
+  >
+    <div class="card__image-wrap">
+      ${imgContent}
+      <div class="card__overlay" aria-hidden="true"></div>
+      ${featuredBadge}
+      <div class="card__view-hint" aria-hidden="true">
+        ${ARROW_SVG}
+        عرض الأنواع
+      </div>
+    </div>
+
+    <div class="card__body">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px;">
+        <h3 class="card__name">${cat.name}</h3>
+        <span class="type-badge ${typeClass}">${cat.type}</span>
+      </div>
+
+      <p class="card__meta">
+        <span class="card__meta-dot" aria-hidden="true"></span>
+        ${cat.short_desc}
+      </p>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;">
+        <span class="stock-pill" aria-label="${cat.varieties_count} أنواع متاحة">
+          <span class="stock-pill-dot" aria-hidden="true"></span>
+          ${cat.varieties_count} أنواع
+        </span>
+        <span style="font-size:.72rem;color:var(--color-text-light);letter-spacing:.06em;">
+          ${cat.season}
+        </span>
+      </div>
+    </div>
+
+    <div class="card__arrow" aria-hidden="true">
+      ${ARROW_SVG}
+    </div>
+  </article>`;
+}
+
+/* ══════════════════════════════════════
+   التنقل إلى صفحة الصنف
+══════════════════════════════════════ */
+function goToCategory(slug) {
+  window.location.href = `${slug}.html`;
+}
+
+/* ══════════════════════════════════════
+   تحديث روابط التواصل
+══════════════════════════════════════ */
+function applyContactLinks(contact) {
+  if (!contact) return;
+
+  const wa  = contact.whatsapp  ? `https://wa.me/${contact.whatsapp}`  : '#';
+  const tel = contact.phone     ? `tel:${contact.phone}`               : '#';
+  const fb  = contact.facebook  || '#';
+  const ig  = contact.instagram || '#';
+
+  const setHref = (id, href) => {
+    const el = document.getElementById(id);
+    if (el) el.href = href;
+  };
+
+  /* nav */
+  setHref('navWhatsapp',  wa);
+  setHref('navFacebook',  fb);
+  setHref('navInstagram', ig);
+  setHref('navPhone',     tel);
+
+  /* hero CTA */
+  setHref('ctaWhatsapp', wa);
+  setHref('ctaPhone',    tel);
+  setHref('ctaFacebook', fb);
+
+  /* footer */
+  setHref('footerWhatsapp',  wa);
+  setHref('footerFacebook',  fb);
+  setHref('footerInstagram', ig);
+  setHref('footerPhoneLink', tel);
+
+  const fPhone = document.getElementById('footerPhone');
+  if (fPhone && contact.phone) fPhone.textContent = contact.phone;
+
+  const fCity = document.getElementById('footerCity');
+  if (fCity && contact.city) fCity.textContent = contact.city;
+}
+
+/* ══════════════════════════════════════
+   تطبيق بيانات المتجر على الصفحة
+══════════════════════════════════════ */
+function applyStoreData(store) {
+  /* العنوان */
+  if (store.name) {
+    document.title = `${store.name} — ${store.tagline || 'أجود الأغراس'}`;
+    document.querySelector('.nav__logo-name').textContent = store.name;
+    document.getElementById('footerStoreName').textContent = store.name;
+    document.getElementById('footerCopyright').textContent =
+      `جميع الحقوق محفوظة — ${store.name} ${new Date().getFullYear()}`;
+  }
+  if (store.tagline) {
+    document.querySelector('.nav__logo-tagline').textContent = store.tagline;
+  }
+
+  /* صاحب المشتل */
+  const owner = store.owner;
+  if (owner) {
+    const bio = document.getElementById('aboutBio');
+    if (bio && owner.bio) bio.textContent = owner.bio;
+  }
+
+  /* الإحصائيات */
+  const s = store.stats;
+  if (s) {
+    ['statVarieties','statVarieties2'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = s.varieties || '200+';
+    });
+    ['statClients','statClients2'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = s.clients || '1500+';
+    });
+    ['statYears','statExp','aboutYears'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = s.experience || '15';
+    });
+  }
+
+  /* التواصل */
+  applyContactLinks(store.contact);
+
+  /* الوصف في الفوتر */
+  if (store.description) {
+    const el = document.getElementById('footerDesc');
+    if (el) el.textContent = store.description;
+  }
+}
+
+/* ══════════════════════════════════════
+   Scroll reveal
+══════════════════════════════════════ */
+function initReveal() {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('is-visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+}
+
+/* ══════════════════════════════════════
+   Nav scroll effect
+══════════════════════════════════════ */
+function initNav() {
+  const nav = document.getElementById('mainNav');
+  const onScroll = () => {
+    nav.classList.toggle('nav--scrolled', window.scrollY > 40);
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+}
+
+/* ══════════════════════════════════════
+   INIT
+══════════════════════════════════════ */
+async function init() {
+  initNav();
+  initReveal();
+
+  try {
+    const data  = await fetchJSON(`${DATA_BASE}categories.json`);
+
+    /* تطبيق بيانات المتجر */
+    if (data.store) applyStoreData(data.store);
+
+    /* بناء شبكة البطاقات */
+    const grid = document.getElementById('categoriesGrid');
+    if (grid && data.categories && data.categories.length) {
+      grid.innerHTML = data.categories
+        .map((cat, i) => buildCategoryCard(cat, i))
+        .join('');
+    }
+
+  } catch (err) {
+    console.warn('تعذّر تحميل البيانات:', err.message);
+
+    /* عرض رسالة بديلة إذا فشل التحميل */
+    const grid = document.getElementById('categoriesGrid');
+    if (grid) {
+      grid.innerHTML = `
+        <div class="empty-state" style="grid-column:1/-1;">
+          <div class="empty-state__icon">
+            ${LEAF_SVG}
+          </div>
+          <h3 class="empty-state__title">لا توجد أصناف متاحة حالياً</h3>
+          <p class="empty-state__text">يرجى التواصل معنا مباشرة للاطلاع على جميع الأصناف المتوفرة</p>
+        </div>`;
+    }
+  }
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>

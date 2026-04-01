@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<script>
+  // تحميل القالب ثم تهيئة الصفحة
+  (function(){
+    var slug='citrus';
+    fetch('template.html').then(r=>r.text()).then(function(html){
+      document.open();document.write(html);document.close();
+      // انتظار تحميل الـ DOM ثم استدعاء initCategoryPage
+      var t=setInterval(function(){
+        if(typeof initCategoryPage==='function'){
+          clearInterval(t);
+          initCategoryPage(slug);
+        }
+      },50);
+    });
+  })();
+</script>
+</head><body></body></html>
