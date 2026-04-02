@@ -686,9 +686,9 @@ async function doLogin() {
   btn.disabled  = true;
 
   try {
-    * اختبار صحة الرمز أولاً */ 
-const me = await ghFetch('/user', pat); 
-if (!me.ok) throw new Error('bad_token'); 
+    /* اختبار صحة الرمز أولاً */ 
+    const me = await ghFetch('/user', pat); 
+    if (!me.ok) throw new Error('bad_token');
 
     /* اختبار الوصول للمستودع */
     const r = await ghFetch(`/repos/${repo}`, pat);
