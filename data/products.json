@@ -7,6 +7,58 @@
   "olivetree": {
     "category_name": "شجرة الزيتون",
     "category_desc": "تعتبر شجرة الزيتون من الأشجار الأكثر تحملا للجفاف كما لها عدة أنواع",
-    "varieties": []
+    "varieties": [
+      {
+        "id": "olivetree--",
+        "name": "زيتون بيشيلون",
+        "origin": "مغربي",
+        "purpose": "زيت معدل",
+        "stock": 40,
+        "fruiting_age": "5",
+        "productivity": "عالية جدا",
+        "resistance": "لا يتحمل الجفاف",
+        "image": "assets/images/varieties/olivetree--.jpg",
+        "sizes": [
+          {
+            "height": "100",
+            "price": 45
+          }
+        ]
+      },
+      {
+        "id": "olivetree--",
+        "name": "زيتون بيشيلون",
+        "origin": "مغربي",
+        "purpose": "زيت معدل",
+        "stock": 40,
+        "fruiting_age": "",
+        "productivity": "",
+        "resistance": "",
+        "image": "assets/images/varieties/olivetree--.jpg",
+        "sizes": [
+          {
+            "height": "100",
+            "price": 45
+          }
+        ]
+      },
+      {
+        "id": "olivetree--",
+        "name": "زيتون بيشيلون",
+        "origin": "مغربي",
+        "purpose": "زيت معدل",
+        "stock": 40,
+        "fruiting_age": "",
+        "productivity": "",
+        "resistance": "",
+        "image": "assets/images/varieties/olivetree--.jpg",
+        "sizes": [
+          {
+            "height": "100",
+            "price": 45
+          }
+        ]
+      }
+    ]
   }
 }
