@@ -796,20 +796,33 @@ function ghFetch(path, pat, opts = {}) {
   });
 }
 
+  function utf8ToBase64(value) { 
+const bytes = new TextEncoder().encode(value); 
+let binary = ''; 
+bytes.forEach((b) => { binary += String.fromCharCode(b); }); 
+return btoa(binary); 
+} 
+
+function base64ToUtf8(value) { 
+const binary = atob(value); 
+const bytes = Uint8Array.from(binary, (ch) => ch.charCodeAt(0)); 
+return new TextDecoder('utf-8', { fatal: false }).decode(bytes); 
+}
+
 async function ghGetFile(path) {
   const r = await ghFetch(`/repos/${STATE.repo}/contents/${path}?ref=${STATE.branch}`);
   if (!r.ok) return null;
   const d = await r.json();
   STATE.shas[path] = d.sha;
-  return JSON.parse(atob(d.content.replace(/\n/g, '')));
+  return JSON.parse(base64ToUtf8(d.content.replace(/\n/g, '')));
 }
 
 async function ghPutFile(path, content, message) {
   const body = {
     message,
-    content: btoa(unescape(encodeURIComponent(
+    content: utf8ToBase64(
       typeof content === 'string' ? content : JSON.stringify(content, null, 2)
-    ))),
+    ),
     branch: STATE.branch
   };
   if (STATE.shas[path]) body.sha = STATE.shas[path];
