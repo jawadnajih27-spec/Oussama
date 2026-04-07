@@ -6,48 +6,23 @@
     "description": "Aghrass store",
     "owner": {
       "name": "Oussama",
-      "title": "DÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©tecteur d'aghrass",
-      "bio": "Ãtudiant et employÃ© au Aghrass projet",
-      "experience_years": 8,
+      "title": "أغراس أغمات",
+      "bio": "",
+      "experience_years": 25,
       "photo": "assets/images/owner.jpg"
     },
     "stats": {
       "varieties": "+150",
-      "clients": "300+",
-      "experience": "10"
+      "clients": "3000+",
+      "experience": "25"
     },
     "contact": {
-      "whatsapp": "212703652247",
-      "phone": "0703652247",
+      "whatsapp": "212600000000",
+      "phone": "0600000000",
       "facebook": "https://facebook.com/almanara.nursery",
       "instagram": "https://instagram.com/almanara.nursery",
       "city": "Maroc-Marrakech"
     }
   },
-  "categories": [
-    {
-      "id": "tree",
-      "slug": "tree",
-      "name": "Arbre d'orange",
-      "type": "زينة ومثمرة",
-      "short_desc": "Pour touts",
-      "season": "Tous",
-      "image": "assets/images/categories/tree.jpg",
-      "placeholder_color": "#4a6741",
-      "varieties_count": 0,
-      "featured": true
-    },
-    {
-      "id": "olivetree",
-      "slug": "olivetree",
-      "name": "شجرة الزيتون",
-      "type": "مثمرة",
-      "short_desc": "شجرة الزيتون المباركة",
-      "season": "الشتاء",
-      "image": "assets/images/categories/olivetree.jpg",
-      "placeholder_color": "#4a6741",
-      "varieties_count": 0,
-      "featured": true
-    }
-  ]
+  "categories": []
 }
