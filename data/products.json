@@ -2,6 +2,41 @@
   "tree": {
     "category_name": "...",
     "category_desc": "شجر NJSERVICES",
-    "varieties": []
+    "varieties": [
+      {
+        "id": "tree-njservices",
+        "name": "NJSERVICES",
+        "origin": "NJSERVICES",
+        "purpose": "NJSERVICES",
+        "stock": 36,
+        "fruiting_age": "9",
+        "productivity": "NJSERVICES",
+        "resistance": "NJSERVICES",
+        "image": "assets/images/varieties/tree-njservices.jpg",
+        "sizes": [
+          {
+            "height": "90cm",
+            "price": 330
+          }
+        ]
+      },
+      {
+        "id": "tree-njservices",
+        "name": "NJSERVICES",
+        "origin": "NJSERVICES",
+        "purpose": "NJSERVICES",
+        "stock": 36,
+        "fruiting_age": "",
+        "productivity": "",
+        "resistance": "",
+        "image": "assets/images/varieties/tree-njservices.jpg",
+        "sizes": [
+          {
+            "height": "90cm",
+            "price": 330
+          }
+        ]
+      }
+    ]
   }
 }
