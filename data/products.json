@@ -36,6 +36,23 @@
             "price": 330
           }
         ]
+      },
+      {
+        "id": "tree-njservices",
+        "name": "NJSERVICES",
+        "origin": "NJSERVICES",
+        "purpose": "NJSERVICES",
+        "stock": 33,
+        "fruiting_age": "NJSERVICES",
+        "productivity": "NJSERVICES",
+        "resistance": "NJSERVICES",
+        "image": "assets/images/varieties/tree-njservices.jpg",
+        "sizes": [
+          {
+            "height": "90 Cm",
+            "price": 33
+          }
+        ]
       }
     ]
   }
