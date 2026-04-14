@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<script>
+  (function(){
+    var slug='bamboo';
+    fetch('template.html').then(r=>r.text()).then(function(html){
+      document.open();document.write(html);document.close();
+      var t=setInterval(function(){
+        if(typeof initCategoryPage==='function'){clearInterval(t);initCategoryPage(slug);}
+      },50);
+    });
+  })();
+</script>
+</head><body></body></html>
