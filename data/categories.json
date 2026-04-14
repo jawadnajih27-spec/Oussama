@@ -26,18 +26,6 @@
   },
   "categories": [
     {
-      "id": "tree",
-      "slug": "tree",
-      "name": "...",
-      "type": "مثمرة",
-      "short_desc": "شجر الزيتون",
-      "season": "Ete",
-      "image": "assets/images/categories/tree.jpg",
-      "placeholder_color": "#4a6741",
-      "varieties_count": 0,
-      "featured": true
-    },
-    {
       "id": "bamboo",
       "slug": "bamboo",
       "name": "قصب البامبو",
