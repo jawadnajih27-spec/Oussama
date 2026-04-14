@@ -36,6 +36,18 @@
       "placeholder_color": "#4a6741",
       "varieties_count": 0,
       "featured": true
+    },
+    {
+      "id": "bamboo",
+      "slug": "bamboo",
+      "name": "قصب البامبو",
+      "type": "زينة",
+      "short_desc": "قصب البامبو لتزيين الفضاءات",
+      "season": "جميع المواسم",
+      "image": "assets/images/categories/bamboo.jpg",
+      "placeholder_color": "#4a6741",
+      "varieties_count": 0,
+      "featured": true
     }
   ]
 }
