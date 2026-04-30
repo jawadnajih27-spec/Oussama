@@ -36,6 +36,18 @@
       "placeholder_color": "#4a6741",
       "varieties_count": 1,
       "featured": true
+    },
+    {
+      "id": "touiya",
+      "slug": "touiya",
+      "name": "Touiya",
+      "type": "زينة",
+      "short_desc": "تزيين حدائق الفيلات",
+      "season": "الصيف",
+      "image": "assets/images/categories/touiya.jpg",
+      "placeholder_color": "#4a6741",
+      "varieties_count": 0,
+      "featured": true
     }
   ]
 }
