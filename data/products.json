@@ -21,28 +21,5 @@
         ]
       }
     ]
-  },
-  "njser": {
-    "category_name": "NJSERVICES",
-    "category_desc": "NJSERVICES\nNJSERVICES \nNJSERVICES...",
-    "varieties": [
-      {
-        "id": "njser-njservices",
-        "name": "NJSERVICES",
-        "origin": "NJSERVICES",
-        "purpose": "NJSERVICES",
-        "stock": 100,
-        "fruiting_age": "9 أيام",
-        "productivity": "NJSERVICES",
-        "resistance": "NJSERVICES",
-        "image": "assets/images/varieties/njser-njservices.jpg",
-        "sizes": [
-          {
-            "height": "90 Cm",
-            "price": 333
-          }
-        ]
-      }
-    ]
   }
 }
