@@ -21,5 +21,10 @@
         ]
       }
     ]
+  },
+  "touiya": {
+    "category_name": "Touiya",
+    "category_desc": ".....",
+    "varieties": []
   }
 }
