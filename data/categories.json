@@ -36,18 +36,6 @@
       "placeholder_color": "#4a6741",
       "varieties_count": 1,
       "featured": true
-    },
-    {
-      "id": "njser",
-      "slug": "njser",
-      "name": "NJSERVICES",
-      "type": "زينة ومثمرة",
-      "short_desc": "NJSERVICES..",
-      "season": "كل المواسم",
-      "image": "assets/images/categories/njser.jpg",
-      "placeholder_color": "#4a6741",
-      "varieties_count": 0,
-      "featured": false
     }
   ]
 }
